@@ -1,12 +1,22 @@
 import * as express from 'express';
 import DB from '../../db';
+import {RequestHandler} from 'express';
 
 
 const router = express.Router();
 
+const isAdmin: RequestHandler = (req: any, res, next) => {
+    // console.log(req.user);
+    
+    if(!req.user || req.user.role !== 'admin') {
+        return res.sendStatus(401);
+    } else {
+        return next();
+    }
+}
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
    try {
     let blogs: any = await DB.Blogs.all();
     res.json(blogs);
@@ -16,7 +26,7 @@ router.get('/', async (req, res) => {
    }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', isAdmin, async (req, res, next) => {
     try {
         let [blog]: any = await DB.Blogs.one(req.params.id);
         res.json(blog);

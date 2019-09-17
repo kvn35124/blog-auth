@@ -3,6 +3,8 @@ import * as path from 'path';
 import routes from './routes';
 import * as passport from 'passport';
 import './middlewares/localstrategy';
+import './middlewares/bearerstrategy';
+import { hashPassword } from './utilities/security/passwords';
 
 
 const app = express();
@@ -15,6 +17,9 @@ app.use(routes);
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 })
+
+
+
 
 const port = process.env.PORT || 3003;
 app.listen(port, () => console.log(`Server listening on port: ${port}`));

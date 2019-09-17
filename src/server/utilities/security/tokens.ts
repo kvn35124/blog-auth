@@ -21,3 +21,16 @@ export const createToken = async (payload: IPayload) => {
     await db.tokens.update(payload.tokenid, token);
     return token;
 }
+
+
+export const ValidToken = async (token: string) => {
+    
+    let payload: IPayload = <IPayload>jwt.decode(token);
+    let [accesstokenid] : any = await db.tokens.findone(payload.tokenid, token);
+    if(!accesstokenid) {
+        throw new Error ('Invalid Token!');
+    } else {
+        return payload;
+    }
+};
+
