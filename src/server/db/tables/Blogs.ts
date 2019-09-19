@@ -2,7 +2,7 @@ import { Query } from '../index';
 
 const all = () => Query(`select Blogs.*, Authors.name, Authors.email from Blogs join Authors on Blogs.authorid = Authors.id`);
 
-const one = (id: number) => Query(`select * from Blogs where id = ?`, [id]);
+const one = (id: number) => Query(`select Blogs.*, Authors.name, Authors.email from Blogs join Authors on Blogs.authorid = Authors.id where Blogs.id = ?`, [id]);
 
 const insert = (title: string, content: string, authorid: number) => Query(`insert into Blogs (title, content, authorid) values (?)`, [[title, content, authorid]]);
 

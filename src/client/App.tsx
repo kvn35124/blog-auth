@@ -4,6 +4,8 @@ import Home from './Pages/Home';
 import Admin from './Pages/Admin';
 import View from './Pages/View';
 import Edit from './Pages/Edit';
+import Login from './Pages/Login';
+
 
 class App extends React.Component<IAppProps, IAppState> {
 
@@ -23,6 +25,7 @@ class App extends React.Component<IAppProps, IAppState> {
                         <Route exact path="/admin" component={Admin} />
                         <Route exact path="/view/:id" component={View} />
                         <Route exact path="/edit/:id" component={Edit} />
+                        <Route exact path="/login" component={Login} />
                     </Switch>
                 </main>
             </Router>

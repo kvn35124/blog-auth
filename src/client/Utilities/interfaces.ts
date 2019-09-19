@@ -7,6 +7,7 @@ export interface IBlog {
     title: string;
     content: string;
     authorid: number;
+    name: string;
 }
 
 

@@ -7,7 +7,7 @@ const router = express.Router();
 
 const isAdmin: RequestHandler = (req: any, res, next) => {
     // console.log(req.user);
-    
+
     if(!req.user || req.user.role !== 'admin') {
         return res.sendStatus(401);
     } else {
@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
    }
 })
 
-router.get('/:id', isAdmin, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     try {
         let [blog]: any = await DB.Blogs.one(req.params.id);
         res.json(blog);
@@ -35,7 +35,7 @@ router.get('/:id', isAdmin, async (req, res, next) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/',isAdmin, async (req, res) => {
     try {
         let result = await DB.Blogs.insert(req.body.title, req.body.content, req.body.authorid);
         res.json(result);

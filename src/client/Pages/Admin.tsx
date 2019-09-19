@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ITag } from '../Utilities/interfaces';
+import {  json, User } from '../Utilities/api';
 
 
 
@@ -12,7 +13,6 @@ class Admin extends React.Component<IAdminProps, IAdminState> {
         this.state = {
             title: '',
             content: '',
-            authorid: 1,
             tags: [],
             selectedTag: '0'
         };
@@ -20,6 +20,9 @@ class Admin extends React.Component<IAdminProps, IAdminState> {
 
 
     async componentDidMount() {
+        if(!User || User.userid === null || User.role !== 'admin') {
+            this.props.history.replace('/login');
+        }
         try {
             let r = await fetch(`/api/tags`);
             let tags = await r.json();
@@ -35,16 +38,12 @@ class Admin extends React.Component<IAdminProps, IAdminState> {
         let newPost = {
             title: this.state.title,
             content: this.state.content,
-            authorid: this.state.authorid,
+            authorid: User.userid,
         }
         try {
-            let r = await fetch(`/api/blogs/`, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify(newPost)
-            })
+
+            let result = await json(`/api/blogs`, 'POST', newPost);
+
             let insertedBlogId = await r.json();
             let result2 = await fetch(`/api/blogtags`, {
                 method: "POST",
@@ -52,8 +51,8 @@ class Admin extends React.Component<IAdminProps, IAdminState> {
                   "Content-type": "application/json"  
                 },
                 body: JSON.stringify({blogid: insertedBlogId, tagid: this.state.selectedTag })
-            })
-            if (r.ok) {
+            });
+            if (result.ok) {
                 this.props.history.push('/');
             }
         } catch (error) {
@@ -105,7 +104,6 @@ interface IAdminProps extends RouteComponentProps{}
 interface IAdminState {
     title: string;
     content: string;
-    authorid: number;
     tags: Array<ITag>;
     selectedTag: string;
 }

@@ -15,6 +15,7 @@ interface IPayload {
 
 export const createToken = async (payload: IPayload) => {
     let {insertId}: any = await db.tokens.insert(payload.userid);
+    console.log(insertId);
     payload.tokenid = insertId;
     payload.unique = crypto.randomBytes(32).toString('hex');
     let token = await jwt.sign(payload, config.auth.secret);

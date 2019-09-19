@@ -2,6 +2,11 @@ import * as React from 'react';
 import BlogCard from '../Component/BlogCard';
 import { Link } from 'react-router-dom';
 import { IBlog } from '../Utilities/interfaces';
+import { json } from '../Utilities/api';
+import { StripeProvider, Elements } from 'react-stripe-elements';
+import Form from '../Component/Form';
+
+
 
 class Home extends React.Component<IHomeProps, IHomeState> {
     constructor(props: IHomeProps) {
@@ -16,8 +21,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
 
     async componentDidMount() {
         try {
-            let r = await fetch(`/api/blogs`);
-            let blogs = await r.json();
+            let blogs = await json(`/api/blogs`);
             this.setState({ blogs });
         } catch (error) {
             console.log(error);
@@ -36,6 +40,11 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                         return <BlogCard blog={blog} />
                     })}
                 </section>
+                <StripeProvider apiKey="pk_live_ksEmR37mJNRGZX98VckworoL00GkqouxeV" >
+                    <Elements>
+                        <Form />
+                    </Elements>
+                </StripeProvider>
             </>
         )
     }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import { IBlog, ITag } from '../Utilities/interfaces';
+import { json } from '../Utilities/api';
 
 
 
@@ -14,7 +15,8 @@ class View extends React.Component<IEditProps, IEditState> {
                 id: 0,
                 title: '',
                 content: '',
-                authorid: 0
+                authorid: 0,
+                name: ''
             },
             blogtags: []
         }
@@ -22,12 +24,10 @@ class View extends React.Component<IEditProps, IEditState> {
 
 
     async componentDidMount() {
-        console.log(this.props.match.params.id);
         try {
-            let r = await fetch(`/api/blogs/${this.props.match.params.id}`);
-            let blog = await r.json();
-            let r2 = await fetch(`/api/blogtags/${this.props.match.params.id}`);
-            let blogtags = await r2.json();
+            let blog = await json(`/api/blogs/${this.props.match.params.id}`);
+            console.log(blog);
+            let blogtags = await json(`/api/blogtags/${this.props.match.params.id}`);
             this.setState({ blog, blogtags });
         } catch (error) {
             console.log(error);
@@ -44,7 +44,7 @@ class View extends React.Component<IEditProps, IEditState> {
                         <div className="card border border-dark shadow m-2">
                             <div className="card-body">
                                 <h2 className="card-title text-center">{this.state.blog.title}</h2>
-                                <p className="card-text text-center">written by: {this.state.blog.authorid}</p>
+                                <p className="card-text text-center">written by: {this.state.blog.name}</p>
                                 <div className="d-flex justify-content-center mb-3">
                                     {this.state.blogtags.map(blogtag => (
                                         <span className="badge badge-dark text-primary p-2 mx-2">{blogtag.name}</span>
